@@ -52,6 +52,8 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
+
+
 class GeometryEngine;
 
 class MainWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -67,9 +69,17 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
     void timerEvent(QTimerEvent *e) Q_DECL_OVERRIDE;
 
+    void keyPressEvent(QKeyEvent *event);
+
+    void keyReleaseEvent(QKeyEvent *event);
+
+
+
     void initializeGL() Q_DECL_OVERRIDE;
     void resizeGL(int w, int h) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
+
+   virtual void update();
 
     void initShaders();
     void initTextures();
@@ -78,6 +88,13 @@ private:
     QBasicTimer timer;
     QOpenGLShaderProgram program;
     GeometryEngine *geometries;
+
+    bool mLeft;
+    bool mRight;
+    bool mForward;
+    bool mBack;
+
+
 
     QOpenGLTexture *texture;
 

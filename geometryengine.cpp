@@ -166,4 +166,16 @@ void GeometryEngine::drawCubeGeometry(QOpenGLShaderProgram *program)
     // Draw cube geometry using indices from VBO 1
     glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, 0);
 }
+
+QMatrix4x4 GeometryEngine::getMatrix()
+{
+    mModelMatrix.setToIdentity();
+    mModelMatrix.translate(mTransform.mPosition);
+    mModelMatrix.rotate(mTransform.mRotation.x(), 1.0, 0.0, 0.0);
+    mModelMatrix.rotate(mTransform.mRotation.y(), 0.0, 1.0, 0.0);
+    mModelMatrix.rotate(mTransform.mRotation.z(), 0.0, 0.0, 1.0);
+    mModelMatrix.scale(mTransform.mScale);
+
+    return mModelMatrix;
+}
 //! [2]

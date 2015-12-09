@@ -45,6 +45,15 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 
+struct Transform
+{
+    QVector3D mPosition;
+    QVector3D mRotation;
+    QVector3D mScale;
+
+    Transform(){};
+};
+
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
@@ -52,6 +61,11 @@ public:
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
+
+    Transform mTransform;
+    QMatrix4x4 mModelMatrix;
+
+    QMatrix4x4 getMatrix();
 
 private:
     void initCubeGeometry();

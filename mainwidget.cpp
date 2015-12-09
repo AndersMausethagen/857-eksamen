@@ -71,6 +71,9 @@ void MainWidget::mousePressEvent(QMouseEvent *e)
 
 void MainWidget::mouseReleaseEvent(QMouseEvent *e)
 {
+    //We don't need to move the object with the mouse
+
+    /*
     // Mouse release position - mouse press position
     QVector2D diff = QVector2D(e->localPos()) - mousePressPosition;
 
@@ -86,6 +89,7 @@ void MainWidget::mouseReleaseEvent(QMouseEvent *e)
 
     // Increase angular speed
     angularSpeed += acc;
+    */
 }
 //! [0]
 
@@ -106,6 +110,52 @@ void MainWidget::timerEvent(QTimerEvent *)
         update();
     }
 }
+
+void MainWidget::keyPressEvent(QKeyEvent *event)
+{
+
+    if(event->key() == Qt::Key_W)
+    {
+        mForward = true;
+    }
+
+    if(event->key() == Qt::Key_S)
+    {
+        mBack = true;
+    }
+    if(event->key() == Qt::Key_A)
+    {
+
+        mLeft = true;
+    }
+    if(event->key() == Qt::Key_D)
+    {
+        mRight = true;
+    }
+
+}
+
+void MainWidget::keyReleaseEvent(QKeyEvent *event)
+{
+
+    if(event->key() == Qt::Key_D)
+    {
+        mRight = false;
+    }
+    if(event->key()== Qt::Key_A)
+    {
+        mLeft = false;
+    }
+    if(event->key() == Qt::Key_W)
+    {
+        mForward = false;
+    }
+    if(event->key() == Qt::Key_S )
+    {
+        mBack = false;
+
+    }
+}
 //! [1]
 
 void MainWidget::initializeGL()
@@ -117,13 +167,13 @@ void MainWidget::initializeGL()
     initShaders();
     initTextures();
 
-//! [2]
+    //! [2]
     // Enable depth buffer
     glEnable(GL_DEPTH_TEST);
 
     // Enable back face culling
     glEnable(GL_CULL_FACE);
-//! [2]
+    //! [2]
 
     geometries = new GeometryEngine;
 
@@ -197,6 +247,7 @@ void MainWidget::paintGL()
 //! [6]
     // Calculate model view transformation
     QMatrix4x4 matrix;
+    QMatrix4x4 modelmatrix;
     matrix.translate(0.0, 0.0, -5.0);
     matrix.rotate(rotation);
 
@@ -208,5 +259,38 @@ void MainWidget::paintGL()
     program.setUniformValue("texture", 0);
 
     // Draw cube geometry
+    modelmatrix = geometries->getMatrix();
+    program.setUniformValue("mvp_matrix",geometries->mModelMatrix);
     geometries->drawCubeGeometry(&program);
+}
+
+void MainWidget::update()
+{
+
+    if(mLeft == true)
+    {
+       // mPlayer->mTransform.mPosition.setX(mPlayer->mTransform.mPosition.x()-0.3f);
+        geometries->mTransform.mPosition.setX(geometries->mTransform.mPosition.x()-0.3f);
+
+    }
+    if(mRight == true)
+    {
+        //mPlayer->mTransform.mPosition.setX(mPlayer->mTransform.mPosition.x()+0.3f);
+
+
+    }
+
+    if(mForward == true)
+    {
+        //mPlayer->mTransform.mPosition.setZ(mPlayer->mTransform.mPosition.z()-0.3f);
+
+
+    }
+    if(mBack == true)
+    {
+       // mPlayer->mTransform.mPosition.setZ(mPlayer->mTransform.mPosition.z()+0.3f);
+
+
+    }
+
 }
