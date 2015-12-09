@@ -102,6 +102,7 @@ private:
 
     QMatrix4x4 projection;
     QMatrix4x4 modelMatrix;
+    QMatrix4x4 mPlayermatrix;
     Camera *mCamera;
 
     QVector2D mousePressPosition;

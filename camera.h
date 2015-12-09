@@ -21,6 +21,7 @@ public:
     Transform mTransform;
     QMatrix4x4 mPerspective;
     QMatrix4x4 mViewMatrix;
+
     //sets standard values for the camera
     /**
 
@@ -30,7 +31,7 @@ public:
        @param farPlane - How far the camera will render objects
        @param fov - the field of view of the camera.
      */
-    Camera(int height, int width, float nearPlane, float farPlane, float fov);
+    Camera(int height = 600, int width = 800, float nearPlane = 0.2f, float farPlane = 2000.0f, float fov = 45.0f);
     ~Camera();
 
 

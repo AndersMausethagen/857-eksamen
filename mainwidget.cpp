@@ -41,6 +41,7 @@
 #include "mainwidget.h"
 #include "camera.h"
 #include <QMouseEvent>
+#include "geometryengine.h"
 
 #include <math.h>
 
@@ -56,10 +57,20 @@ MainWidget::MainWidget(QWidget *parent) :
 
 void MainWidget::init()
 {
+
+
+    initShaders();
+    initTextures();
+
     mCamera = new Camera(600,800,0.2f,100.0f,45.0f);
-    mCamera->mViewMatrix.translate(0.0f,2.0f, -3.0f);
-    mCamera->setBackgroundColor(0.0, 0.0, 0.0, 1.0);
-    geometries = new GeometryEngine(0.0f,0.0f,0.0f);
+    mCamera->mViewMatrix.translate(0.0f,0.0f, 0.0f);
+    mCamera->mTransform.mPosition = QVector3D(0.0f,0.0f,0.0f);
+    mCamera->setBackgroundColor(0.0, 0.0, 1.0, 1.0);
+
+
+    geometries = new GeometryEngine(0.0f,0.0f,-3.0f);
+    geometries->mTransform.mPosition = QVector3D(0.0f, 0.0f, -3.0f);
+
 
 
 }
@@ -125,7 +136,7 @@ void MainWidget::timerEvent(QTimerEvent *)
 
 void MainWidget::keyPressEvent(QKeyEvent *event)
 {
-
+//Allows the cube to move in a set direction when a key is pressed
     if(event->key() == Qt::Key_W)
     {
         mForward = true;
@@ -242,13 +253,12 @@ void MainWidget::paintGL()
 
     texture->bind();
 
-    //! [6]
     // Calculate model view transformation
     mCamera->rotate(angularSpeed, rotationAxis);
     // Set projection matrix
     program.setUniformValue("pMatrix", mCamera->mPerspective);
 
-
+//![6]
     // Set nMatrix
     //matrix for normals - inverted mv-matrix
     QMatrix3x3 nMatrix = mCamera->mViewMatrix.normalMatrix();
@@ -256,7 +266,7 @@ void MainWidget::paintGL()
     program.setUniformValue("nMatrix", nMatrix);
 
 
-    //! [6]
+
 
     // Use texture unit 0 which contains cube.png
     program.setUniformValue("texture", 0);
@@ -265,6 +275,9 @@ void MainWidget::paintGL()
     modelMatrix = geometries->getMatrix();
     program.setUniformValue("mvMatrix",mCamera->mViewMatrix*modelMatrix);
     geometries->drawCubeGeometry(&program);
+
+
+
 }
 
 void MainWidget::update()

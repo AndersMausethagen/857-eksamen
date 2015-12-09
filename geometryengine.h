@@ -51,7 +51,7 @@
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
-    GeometryEngine(float xPos = 0.0f, float yPos = 0.0f, float zPos = 0.0f);
+    GeometryEngine(float xPos = 0.0f, float yPos = 0.0f, float zPos = -3.0f);
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
@@ -60,6 +60,7 @@ public:
     QMatrix4x4 mModelMatrix;
 
     QMatrix4x4 getMatrix();
+   // GeometryEngine *geometries;
 
 private:
     void initCubeGeometry();
