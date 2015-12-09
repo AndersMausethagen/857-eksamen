@@ -50,7 +50,7 @@ struct VertexData
 };
 
 //! [0]
-GeometryEngine::GeometryEngine()
+GeometryEngine::GeometryEngine(float xPos, float yPos, float zPos)
     : indexBuf(QOpenGLBuffer::IndexBuffer)
 {
     initializeOpenGLFunctions();
@@ -61,6 +61,11 @@ GeometryEngine::GeometryEngine()
 
     // Initializes cube geometry and transfers it to VBOs
     initCubeGeometry();
+
+    //Set position
+    mTransform.mPosition = QVector3D(xPos, yPos, zPos);
+    mTransform.mScale = QVector3D(1.0, 1.0, 1.0);
+    mTransform.mRotation.setX(0.0);
 }
 
 GeometryEngine::~GeometryEngine()

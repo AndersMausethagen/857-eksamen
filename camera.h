@@ -46,7 +46,6 @@ void rotate(float angle, const QVector3D &axis);
 //function to change the position of the camera
 void translate(float x, float y, float z);
 void setAspectRatio(int w, int h);
-
 void setBackgroundColor(float r, float g, float b, float a);
 
 };

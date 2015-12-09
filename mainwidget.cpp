@@ -39,7 +39,7 @@
 ****************************************************************************/
 
 #include "mainwidget.h"
-
+#include "camera.h"
 #include <QMouseEvent>
 
 #include <math.h>
@@ -50,6 +50,18 @@ MainWidget::MainWidget(QWidget *parent) :
     texture(0),
     angularSpeed(0)
 {
+
+
+}
+
+void MainWidget::init()
+{
+    mCamera = new Camera(600,800,0.2f,100.0f,45.0f);
+    mCamera->mViewMatrix.translate(0.0f,2.0f, -3.0f);
+    mCamera->setBackgroundColor(0.0, 0.0, 0.0, 1.0);
+    geometries = new GeometryEngine(0.0f,0.0f,0.0f);
+
+
 }
 
 MainWidget::~MainWidget()
@@ -221,21 +233,7 @@ void MainWidget::initTextures()
 //! [4]
 
 //! [5]
-void MainWidget::resizeGL(int w, int h)
-{
-    // Calculate aspect ratio
-    qreal aspect = qreal(w) / qreal(h ? h : 1);
 
-    // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
-    const qreal zNear = 3.0, zFar = 7.0, fov = 45.0;
-
-    // Reset projection
-    projection.setToIdentity();
-
-    // Set perspective projection
-    projection.perspective(fov, aspect, zNear, zFar);
-}
-//! [5]
 
 void MainWidget::paintGL()
 {
@@ -244,23 +242,28 @@ void MainWidget::paintGL()
 
     texture->bind();
 
-//! [6]
+    //! [6]
     // Calculate model view transformation
-    QMatrix4x4 matrix;
-    QMatrix4x4 modelmatrix;
-    matrix.translate(0.0, 0.0, -5.0);
-    matrix.rotate(rotation);
+    mCamera->rotate(angularSpeed, rotationAxis);
+    // Set projection matrix
+    program.setUniformValue("pMatrix", mCamera->mPerspective);
 
-    // Set modelview-projection matrix
-    program.setUniformValue("mvp_matrix", projection * matrix);
-//! [6]
+
+    // Set nMatrix
+    //matrix for normals - inverted mv-matrix
+    QMatrix3x3 nMatrix = mCamera->mViewMatrix.normalMatrix();
+    //hooking matrix to shader
+    program.setUniformValue("nMatrix", nMatrix);
+
+
+    //! [6]
 
     // Use texture unit 0 which contains cube.png
     program.setUniformValue("texture", 0);
 
     // Draw cube geometry
-    modelmatrix = geometries->getMatrix();
-    program.setUniformValue("mvp_matrix",geometries->mModelMatrix);
+    modelMatrix = geometries->getMatrix();
+    program.setUniformValue("mvMatrix",mCamera->mViewMatrix*modelMatrix);
     geometries->drawCubeGeometry(&program);
 }
 
@@ -269,28 +272,32 @@ void MainWidget::update()
 
     if(mLeft == true)
     {
-       // mPlayer->mTransform.mPosition.setX(mPlayer->mTransform.mPosition.x()-0.3f);
         geometries->mTransform.mPosition.setX(geometries->mTransform.mPosition.x()-0.3f);
 
     }
     if(mRight == true)
     {
-        //mPlayer->mTransform.mPosition.setX(mPlayer->mTransform.mPosition.x()+0.3f);
+        geometries->mTransform.mPosition.setX(geometries->mTransform.mPosition.x()+0.3f);
+
 
 
     }
 
     if(mForward == true)
     {
-        //mPlayer->mTransform.mPosition.setZ(mPlayer->mTransform.mPosition.z()-0.3f);
+        geometries->mTransform.mPosition.setZ(geometries->mTransform.mPosition.z()-0.3f);
+
 
 
     }
     if(mBack == true)
     {
-       // mPlayer->mTransform.mPosition.setZ(mPlayer->mTransform.mPosition.z()+0.3f);
+        geometries->mTransform.mPosition.setZ(geometries->mTransform.mPosition.z()+0.3f);
+
 
 
     }
 
 }
+
+

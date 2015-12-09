@@ -51,6 +51,7 @@
 #include <QBasicTimer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#include "camera.h"
 
 
 
@@ -76,10 +77,11 @@ protected:
 
 
     void initializeGL() Q_DECL_OVERRIDE;
-    void resizeGL(int w, int h) Q_DECL_OVERRIDE;
+   // void resizeGL(int w, int h) Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
 
    virtual void update();
+    virtual void init();
 
     void initShaders();
     void initTextures();
@@ -99,6 +101,8 @@ private:
     QOpenGLTexture *texture;
 
     QMatrix4x4 projection;
+    QMatrix4x4 modelMatrix;
+    Camera *mCamera;
 
     QVector2D mousePressPosition;
     QVector3D rotationAxis;

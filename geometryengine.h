@@ -44,20 +44,14 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
+#include "transform.h"
 
-struct Transform
-{
-    QVector3D mPosition;
-    QVector3D mRotation;
-    QVector3D mScale;
 
-    Transform(){};
-};
 
 class GeometryEngine : protected QOpenGLFunctions
 {
 public:
-    GeometryEngine();
+    GeometryEngine(float xPos = 0.0f, float yPos = 0.0f, float zPos = 0.0f);
     virtual ~GeometryEngine();
 
     void drawCubeGeometry(QOpenGLShaderProgram *program);
